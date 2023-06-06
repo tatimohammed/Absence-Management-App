@@ -1,0 +1,75 @@
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+body{
+    background-image: linear-gradient(to bottom right, #c1ffc7, #a0d8c9);
+    background-size: cover;
+    height: 80vh;
+}
+
+#login-bg{
+    margin-top: 10%;
+}
+
+
+#login{
+    background-color: white;
+    border-radius: 0 15px 15px 0;
+    box-shadow: 0 6px 8px 0 rgba(0, 0, 0, 0.4), 0 6px 20px 0 rgba(0, 0, 0, 0.23);
+    border: 2px solid white;
+   
+}
+
+#img img{
+    border-radius: 15px 0 0 15px;
+    box-shadow: 0 6px 8px 0 rgba(0, 0, 0, 0.4), 0 6px 20px 0 rgba(0, 0, 0, 0.23);
+    border: 2px solid white;
+    height: 55vh;
+}
+
+
+#head h1{
+    padding-top: 1%;
+    padding-bottom: 3%;
+    font-size: 25px;
+    width: 100%;
+    text-align: center;
+    color: #3d3a2e;
+}
+
+#logo h1{
+    font-size: 80px;
+    text-align: center;
+    color: #3d3a2e;
+}
+input[type="text"]{
+    padding: 7px;
+    border-radius: 15px;
+    border: 1px solid #3d3a2e;
+}
+input[type="password"]{
+    padding: 7px;
+    border-radius: 15px;
+    border: 1px solid #3d3a2e;
+}
+
+input[type="submit"]{
+    padding: 7px;
+    border-radius: 15px;
+    border: 1px solid white;
+    color: white;
+    font-weight: bold;
+    background-color: #3d3a2e;
+    transition: 0.5s;
+}
+input[type="submit"]:hover{
+    background-color: #2d2b22;
+}
+
+#tji{
+    margin-top: 13%;
+    margin-bottom: 0;
+
+}

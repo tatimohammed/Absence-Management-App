@@ -1,0 +1,66 @@
+body{
+    background-color: black;
+}
+#nav{
+    background-color: #3d3a2e;
+}
+
+#logo{
+    border-right: 2px solid white;
+}
+#logo h3{
+    font-size: 20px;
+}
+#logo h1{
+    font-size: 40px;
+}
+
+#nav-list a{
+    margin-right: 4%;
+    margin-left: 4%;
+    font-size: 20px;
+    font-weight: bold;
+}
+#nav-list i{
+    font-size: 25px;
+}
+
+#options{
+    border-left: 2px solid white;
+}
+
+#options a{
+    margin-left: 5%;
+    margin-right: 5%;
+    font-size: 25px;
+    transition: 0.5s;
+}
+
+#options a:hover{
+    font-size: 27px;
+    font-weight: bold;
+    box-shadow: 0 6px 8px 0 rgba(0, 0, 0, 0.4), 0 6px 20px 0 rgba(0, 0, 0, 0.23);
+
+}
+
+#here{
+    background-color: white;
+    color: #3d3a2e;
+    padding-top: 2%;
+    padding-bottom: 2%;
+    border-radius: 15px;
+    padding-left: 3%;
+    padding-right: 3%;
+}
+
+#user i{
+    font-size: 40px;
+}
+#user h4{
+    font-size: 20px;
+}
+#user{
+    margin-top: auto;
+    margin-bottom: auto;
+    border-left: 2px solid white;
+}

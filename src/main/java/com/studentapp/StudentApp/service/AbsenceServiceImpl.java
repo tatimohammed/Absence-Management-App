@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 import com.studentapp.StudentApp.dao.AbsenceRepository;
 import com.studentapp.StudentApp.dao.MatiereRepository;
 import com.studentapp.StudentApp.model.Absence;
+import com.studentapp.StudentApp.model.Matiere;
 import com.studentapp.StudentApp.utils.AbsenceTable;
 
 @Service
@@ -43,8 +44,7 @@ public class AbsenceServiceImpl implements AbsenceService{
 			at.setId(a.getId());
 			at.setCne(a.getEtudiant().getCne());
 			at.setStartDate(a.getDateHeureDebutAbsence());
-			String fullName = utilisateurServiceImpl.getById(a.getEtudiant().getId()).getPrenomFR() + " "
-					+ utilisateurServiceImpl.getById(a.getEtudiant().getId()).getNomFR();
+			String fullName = a.getEtudiant().getPrenomFR() + " " + a.getEtudiant().getNomFR();
 			
 			at.setFullName(fullName);
 			at.setEndDate(a.getDateHeureFinAbsence());
@@ -88,6 +88,19 @@ public class AbsenceServiceImpl implements AbsenceService{
 		absence.setMatiere(null);
 		absence.setNiveau(null);
 		absenceRepository.delete(absence);
+		absenceRepository.flush();
+		
+	}
+
+	@Override
+	public void updateAbsence(Long absenceId, Absence absenceToUpdate, Matiere m, Date dateS, Date dateE) {
+		Absence absence = getById(absenceId);
+		
+		absence.setDateHeureDebutAbsence(dateS);
+		absence.setDateHeureFinAbsence(dateE);
+		absence.setEtat(absenceToUpdate.getEtat());
+		absence.setMatiere(m);
+		
 		absenceRepository.flush();
 		
 	}

@@ -11,7 +11,7 @@
 <meta name="author" content="">
 <script src="https://kit.fontawesome.com/5076e1c884.js"
 	crossorigin="anonymous"></script>
-<title>Cadre Home</title>
+<title>Update Home</title>
 
 <!-- Custom fonts for this template-->
 <link href="vendor/fontawesome-free/css/all.min.css" rel="stylesheet"
@@ -42,7 +42,7 @@
 					<i class="fas fa-laugh-wink"></i>
 				</div>
 				<div class="sidebar-brand-text mx-3">
-					Cadre <sup>JTM</sup>
+					Cadre <sup><b>JT</b></sup>
 				</div>
 			</a>
 
@@ -353,10 +353,10 @@
 					</div>
 
 					<!-- Content Row -->
-					<div class="row">
+					<div class="row container text-center m-auto">
 
 						<!-- Content Column -->
-						<div class="col-lg-12 mb-4">
+						<div class="col-lg-12 mb-5">
 
 							<!-- Project Card Example -->
 							<div class="card shadow mb-4">
@@ -364,47 +364,79 @@
 									<h6 class="m-0 font-weight-bold text-primary">Update
 										Absence Data</h6>
 								</div>
-								<div class="card-body">
-									<form th:action="@{/addContact}" method="post" id="add-form">
-										<div class="row" id="form-add-contact">
-											<div class="col-6">
-												<label for="">CNE:</label><br> <input name="first_name"
-													type="text" placeholder="Ex: H142056623" required><br>
-												<label for="">First Name:</label><br> <input
-													name="last_name" type="text" placeholder="Ex: Mohammed"
-													required><br> <label for="">Last Name:</label><br>
-												<input name="phone1" type="text" placeholder="Ex: TATI"
-													required><br> <label for="">Start
-													Date:</label><br> <input type="datetime-local" id="dateInput"
-													name="dateInput">
+								<div class="card-body text-primary">
+									<form th:action="@{/cadre/update}" method="post" id="add-form"
+										th:object="${AbsenceToUpdate}">
+										<div class="row text-center" id="form-add-contact">
+											<input type="hidden" name="Id" th:value="${AbsenceToUpdate.getId()}">
+											<div class="col-6 mt-5">
+												<label for=""><b>CNE</b></label><br> <input
+													th:value="${AbsenceToUpdate.getEtudiant().getCne()}"
+													type="text" placeholder="Ex: H142056623" required
+													disabled="disabled"><br> <label for=""><b>First
+														Name</b></label><br> <input
+													th:value="${AbsenceToUpdate.getEtudiant().getPrenomFR()}"
+													type="text" placeholder="Ex: Mohammed" required
+													disabled="disabled"><br> <label for=""><b>Last
+														Name</b></label><br> <input
+													th:value="${AbsenceToUpdate.getEtudiant().getNomFR()}"
+													type="text" placeholder="Ex: TATI" required
+													disabled="disabled">
 											</div>
-											<div class="col-6">
-												<label for="">End Date:</label><br> <input
-													type="datetime-local" id="dateInput" name="dateInput"><br>
-												<label for="">Element:</label><br> <select
-													name="moduleInput" id="">
+											<div class="col-6 mt-2">
+												<label for=""><b>Start Date</b></label><br> <input
+													type="datetime-local"
+													th:value="${AbsenceToUpdate.getDateHeureDebutAbsence()}"
+													name ="startDate"
+													><br>
+												<label for=""><b>End Date</b></label><br> <input
+													type="datetime-local"
+													th:value="${AbsenceToUpdate.getDateHeureFinAbsence()}"
+													name ="endDate"><br>
+												<label for=""><b>Element</b></label><br> <select name="module">
 													<option value="0" selected>Choose a model</option>
 													<option th:each="module : ${allModule}"
 														th:text="${module.getTitre()}"
-														th:value="${module.getIdModule()}"></option>
+														th:value="${module.getIdModule()}"
+														th:selected="${AbsenceToUpdate.getMatiere().getModule().getTitre()}"></option>
 
-												</select><br> <label for="">Etat of the absence:</label><br>
+												</select><br> <label for=""><b>Etat of the absence<b></b></label><br>
 												<label for="M" id="gender">Justified</label><input
-													name="gender" type="radio" value="0" id="M"
-													style="margin-right: 5%;"> <label for="F"
-													id="gender">Not Justified</label><input name="gender"
-													type="radio" value="1" id="F"><br> <label
-													for="">Type of the session:</label><br> <label for="M"
-													id="gender">Course </label><input name="gender" type="radio"
-													value="M" id="M" style="margin-right: 5%;"><br> <label
-													for="F" id="gender">TD </label><input name="gender"
-													type="radio" value="F" id="F"><br> <label
-													for="F" id="gender">TP </label><input name="gender"
-													type="radio" value="F" id="F">
+													type="radio" th:checked="${AbsenceToUpdate.getEtat() == 0}" th:field="*{etat}"
+													th:value="${AbsenceToUpdate.getEtat()}"
+													id="M" style="margin-right: 5%;"> <label for="F"
+													id="gender">Not Justified</label><input
+													th:checked="${AbsenceToUpdate.getEtat() == 1}" type="radio" th:field="*{etat}"
+													th:value="${AbsenceToUpdate.getEtat()}"
+													id="F"><br> <label for=""><b>Type
+														of the session</b></label>
+
+												<div class="row m-auto" style="width: 60%">
+													<div class="col-4">
+														<label for="M" id="gender">Course </label><input name="nom"
+															type="radio" id="M"
+															th:checked="${AbsenceToUpdate.getMatiere().getNom() == 'Course'}"
+															th:value="${AbsenceToUpdate.getMatiere().getNom()}"
+															>
+													</div>
+													<div class="col-4">
+														<label for="F" id="gender">TD </label><input name="nom"
+															th:checked="${AbsenceToUpdate.getMatiere().getNom() == 'TD'}"
+															th:value="${AbsenceToUpdate.getMatiere().getNom()}"
+															type="radio" id="F">
+													</div>
+													<div class="col-4">
+														<label for="G" id="gender">TP </label><input name="nom"
+															th:checked="${AbsenceToUpdate.getMatiere().getNom() == 'TP'}"
+															th:value="${AbsenceToUpdate.getMatiere().getNom()}"
+															type="radio" id="G">
+													</div>
+												</div>
 											</div>
 										</div>
-										<div id="submit-form">
-											<input type="submit" class="btn btn-success font-weight-bold" value="Submit" id="btn">
+										<div id="submit-form" class="text-center">
+											<input type="submit" class="btn btn-success font-weight-bold"
+												value="Submit" id="btn">
 										</div>
 
 									</form>
@@ -426,7 +458,8 @@
 			<footer class="sticky-footer bg-white">
 				<div class="container my-auto">
 					<div class="copyright text-center my-auto">
-						<span>Copyright &copy; JTI 2023</span>
+						<span>Copyright &copy; <b>JT</b> 2023
+						</span>
 					</div>
 				</div>
 			</footer>

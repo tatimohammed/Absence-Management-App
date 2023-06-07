@@ -18,4 +18,10 @@ public class UtilisateurServiceImpl implements UtilisateurService{
 		return utilisateurRepository.findByid(id);
 	}
 
+	@Override
+	public Utilisateur add(Utilisateur u) {
+		// TODO Auto-generated method stub
+		return utilisateurRepository.save(u);
+	}
+
 }

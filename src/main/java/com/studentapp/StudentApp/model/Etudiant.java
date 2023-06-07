@@ -1,6 +1,6 @@
 package com.studentapp.StudentApp.model;
 
-import java.sql.Date;
+import java.util.Date;
 import java.util.List;
 
 import javax.persistence.*;
@@ -33,6 +33,12 @@ public class Etudiant extends Utilisateur{
 	}
 
 	public void setDateNaissance(Date dateNaissance) {
+		this.dateNaissance = dateNaissance;
+	}
+
+	public Etudiant(String cne, Date dateNaissance) {
+		super();
+		this.cne = cne;
 		this.dateNaissance = dateNaissance;
 	}
 	

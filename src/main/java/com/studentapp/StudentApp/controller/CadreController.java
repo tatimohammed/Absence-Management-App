@@ -16,20 +16,26 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import com.studentapp.StudentApp.dao.EtudiantRepository;
 import com.studentapp.StudentApp.model.Absence;
+import com.studentapp.StudentApp.model.Etudiant;
 import com.studentapp.StudentApp.model.Matiere;
 import com.studentapp.StudentApp.model.Module;
 import com.studentapp.StudentApp.model.Niveau;
+import com.studentapp.StudentApp.model.Utilisateur;
 import com.studentapp.StudentApp.service.AbsenceServiceImpl;
+import com.studentapp.StudentApp.service.EtudiantServiceImpl;
 import com.studentapp.StudentApp.service.MatiereServiceImpl;
 import com.studentapp.StudentApp.service.ModuleServiceImpl;
 import com.studentapp.StudentApp.service.NiveauServiceImpl;
 import com.studentapp.StudentApp.service.UtilisateurServiceImpl;
 import com.studentapp.StudentApp.utils.AbsenceTable;
+import com.studentapp.StudentApp.utils.Message;
 
 @Controller
 @RequestMapping("/cadre")
@@ -37,6 +43,12 @@ public class CadreController {
 
 	@Autowired
 	private NiveauServiceImpl niveauServiceImpl;
+	
+	@Autowired
+	private UtilisateurServiceImpl utilisateurServiceImpl;
+	
+	@Autowired
+	private EtudiantServiceImpl etudiantServiceImpl;
 
 	@Autowired
 	private ModuleServiceImpl moduleServiceImpl;
@@ -142,19 +154,71 @@ public class CadreController {
 
 		return "cadre/homeCadre";
 	}
-	
+
 	@GetMapping("/delete")
-	public String deleteAbsence(@RequestParam(name="absenceId") Long absenceId, Model model) {
+	public String deleteAbsence(@RequestParam(name = "absenceId") Long absenceId, Model model) {
 		selector(model);
 		absenceServiceImpl.deleteAbsence(absenceId);
-		
+
 		return "cadre/homeCadre";
 	}
-	
-	@GetMapping("/edit")
-	public String editAbsence(Model model) {
-		//@RequestParam(name="absenceId") Long absenceId, Model model
+
+	@PostMapping("/update")
+	public String updateAbsence(@RequestParam(name = "Id", required = false) Long Id,
+			@ModelAttribute("AbsenceToUpdate") Absence absenceToUpdate,
+			@RequestParam(name = "module") Long moduleId,
+			@RequestParam(name = "startDate") String sDate,
+			@RequestParam(name = "endDate") String eDate,
+			@RequestParam(name = "nom") String nom,
+			Model model) throws ParseException {
 		selector(model);
+		SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm");
+
+		Date dateS = format.parse(sDate);
+		Date dateE = format.parse(eDate);
+		Matiere m = matiereServiceImpl.getMatiereByModuleAndNom(moduleId, nom);
+		System.out.println(Id);
+		absenceServiceImpl.updateAbsence(Id, absenceToUpdate, m, dateS, dateE);
+		Message msg = new Message();
+		msg.setContent("Absence: cne: " + absenceServiceImpl.getById(Id).getEtudiant().getCne() + " Has been Updated!");
+		model.addAttribute("msg", msg.getContent());
+		return "cadre/homeCadre";
+	}
+
+	@GetMapping("/edit")
+	public String editAbsence(@RequestParam(name = "absenceId") Long absenceId, Model model) {
+		selector(model);
+
+		Absence a = absenceServiceImpl.getById(absenceId);
+		model.addAttribute("AbsenceToUpdate", a);
+
 		return "cadre/updateAbsence";
 	}
+	
+	@GetMapping("/studentMgn")
+	public String showStudentMgn() {
+		return "cadre/StudentMgn";
+	}
+	
+	@PostMapping("/addStudent")
+	public String addStudent(@ModelAttribute(name="studentToAdd") Utilisateur u,
+			@RequestParam(name="cne") String cne,
+			@RequestParam(name="birthday") String birthday, Model model) throws ParseException {
+		
+		SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm");
+
+		Date birthdayD = format.parse(birthday);
+		
+		utilisateurServiceImpl.add(u);
+		
+		Etudiant etd = new Etudiant();
+		etd.setCne(cne);
+		etd.setDateNaissance(birthdayD);
+		
+		etudiantServiceImpl.addEtudiant(etd);
+		
+		
+		return "redirect:/cadre/studentMgn";
+	}
+	
 }

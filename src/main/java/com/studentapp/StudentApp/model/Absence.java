@@ -47,7 +47,7 @@ public class Absence {
 	private Etudiant etudiant;
 	
 	
-
+	
 	public List<TypeSeance> getTypeSeances() {
 		return typeSeances;
 	}

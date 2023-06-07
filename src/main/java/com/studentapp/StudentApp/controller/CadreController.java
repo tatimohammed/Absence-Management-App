@@ -196,22 +196,20 @@ public class CadreController {
 	}
 	
 	@GetMapping("/studentMgn")
-	public String showStudentMgn() {
+	public String showStudentMgn(Model model) {
+		model.addAttribute("studentToAdd", new Etudiant());
 		return "cadre/StudentMgn";
 	}
 	
 	@PostMapping("/addStudent")
-	public String addStudent(@ModelAttribute(name="studentToAdd") Utilisateur u,
+	public String addStudent(@ModelAttribute(name="studentToAdd") Etudiant etd,
 			@RequestParam(name="cne") String cne,
 			@RequestParam(name="birthday") String birthday, Model model) throws ParseException {
 		
-		SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm");
+		SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
 
 		Date birthdayD = format.parse(birthday);
 		
-		utilisateurServiceImpl.add(u);
-		
-		Etudiant etd = new Etudiant();
 		etd.setCne(cne);
 		etd.setDateNaissance(birthdayD);
 		

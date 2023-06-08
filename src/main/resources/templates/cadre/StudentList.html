@@ -67,8 +67,8 @@
 							class="nav-link dropdown-toggle text-primary"
 							th:href="@{/cadre/homeCadre}">Home</a></li>
 						<li class="nav-item dropdown no-arrow"><a
-							class="nav-link dropdown-toggle text-primary" href="">Student
-								Management</a></li>
+							class="nav-link dropdown-toggle text-primary"
+							th:href="@{/cadre/studentMgn}">Student Management</a></li>
 						<li class="nav-item dropdown no-arrow"><a
 							class="nav-link dropdown-toggle text-primary" href="">Compte
 								Management</a></li>
@@ -115,132 +115,99 @@
 					<!-- Page Heading -->
 					<div
 						class="d-sm-flex align-items-center justify-content-between mb-4">
-						<h1 class="h3 mb-0 text-gray-800 ">Student Management</h1>
-						<a th:href="@{/cadre/listStudent}"
+						<h1 class="h3 mb-0 text-gray-800">Absence Managemnt</h1>
+						<a href="#"
+							onclick="exportTableToCSV('table-absence', 'absenceData.csv')"
 							class="d-none d-sm-inline-block btn btn-sm shadow-sm text-white"
 							style="background-color: #3d3a2e;"><i
-							class="fas fa-list fa-sm text-white"></i> List Of Students</a>
+							class="fas fa-download fa-sm text-white"></i> Download CSV</a>
 					</div>
 
 					<!-- Content Row -->
-					<div class="row m-auto text-primary" style="width: 70%">
+					<form th:action="@{/cadre/list}" method="post">
+						<div class="row">
+
+							<!-- Select a class -->
+							<div class="col-xl-3 col-md-6 mb-4">
+								<div class="card border-left-primary shadow h-100 py-2">
+									<div class="card-body">
+										<div class="row no-gutters align-items-center">
+											<div class="col mr-2">
+												<div
+													class="text-xs font-weight-bold text-primary text-uppercase mb-1">
+													Select a Class</div>
+												<div class="h6 mb-0 font-weight-bold text-gray-800">
+													<select name="niveauInput" id="">
+														<option value="0" selected>Choose a class</option>
+														<option th:each="niveau : ${allNiveau}"
+															th:text="${niveau.getAlias()}"
+															th:value="${niveau.getIdNiveau()}"></option>
+													</select>
+												</div>
+											</div>
+											<div class="col-auto">
+												<i class="fa-sharp fa-solid fa-school fa-2x text-gray-300"></i>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+
+						</div>
+
+					</form>
+
+					<!-- Content Row -->
+					<div class="row">
 
 						<!-- Content Column -->
-						<div class="col-lg-12 mb-4 text-center container">
+						<div class="col-lg-12 mb-4">
 
-
+							<!-- Project Card Example -->
 							<div class="card shadow mb-4">
 								<div class="card-header py-3">
-									<h6 class="m-0 font-weight-bold text-primary">Add Student</h6>
+									<h6 class="m-0 font-weight-bold text-primary">List Of
+										Students</h6>
 								</div>
-								<div class="mt-3 mb-2">
-									<form th:action="@{/cadre/addStudent}" method="post"
-										id="add-form" th:object="${studentToAdd}">
-										<div class="row mt-3" id="form-add-contact">
-											<div class="col-6">
-												<p class="font-weight-bold">First Name (Fr)</p>
-												<input type="text" placeholder="Ex: Mohammed"
-													th:field="*{prenomFR}" required>
-												<p class="font-weight-bold">Last Name (Fr)</p>
-												<input th:field="*{nomFR}" type="text"
-													placeholder="Ex: TATI" required>
-												<p class="font-weight-bold">First Name (Ar)</p>
-												<input th:field="*{prenomAR}" type="text"
-													placeholder="Ex: محمد">
-												<p class="font-weight-bold">Last Name (Ar)</p>
-												<input th:field="*{nomAR}" type="text"
-													placeholder="Ex: تاتي">
-												<p class="font-weight-bold">Phone Number</p>
-												<input th:field="*{tele}" type="text"
-													placeholder="Ex: 06xxxxxx63" required>
-
-											</div>
-											<div class="col-6 mt-4">
-												<p class="font-weight-bold">CIN</p>
-												<input th:field="*{cin}" type="text"
-													placeholder="Ex: FLxxx82" required>
-												<p class="font-weight-bold">CNE</p>
-												<input name="cne" type="text" placeholder="Ex: H14xxxxxxx3"
-													required>
-												<p class="font-weight-bold">Email</p>
-												<input th:field="*{email}" type="text"
-													placeholder="Ex: example@gmail.com">
-												<p class="font-weight-bold">Birthday</p>
-												<input name="birthday" type="date">
-
-											</div>
-										</div>
-										<div id="submit-form">
-											<input type="submit"
-												class="btn btn-success font-weight-bold mt-4 mb-2"
-												value="Add Student" id="btn">
-										</div>
-
-									</form>
+								<div class="card-body">
+									<table class="" id="table-absence" th:if="${absences != null}">
+										<thead class="bg-success">
+											<th>Student CNE</th>
+											<th>Full Name</th>
+											<th>Start Date</th>
+											<th>End Date</th>
+											<th>Element</th>
+											<th>Type of the session</th>
+											<th>Etat of the absence</th>
+											<th>Prof</th>
+											<th>Modify</th>
+										</thead>
+										<tbody>
+											<tr th:each="absence : ${absences}">
+												<td th:text="${absence.cne}"></td>
+												<td th:text="${absence.fullName}"></td>
+												<td th:text="${absence.startDate}"></td>
+												<td th:text="${absence.endDate}"></td>
+												<td th:text="${absence.Element}"></td>
+												<td th:text="${absence.typeSession}"></td>
+												<td th:text="${absence.etatAbsence}"></td>
+												<td th:text="${absence.prof}"></td>
+												<td><a
+													th:href="@{/cadre/edit(absenceId=${absence.id})}"><i
+														class="fa-solid fa-pen-to-square"></i></a><br> <a
+													th:href="@{/cadre/delete(absenceId=${absence.id})}"><i
+														class="fa-sharp fa-solid fa-trash"></i></a></td>
+											</tr>
+										</tbody>
+									</table>
+									<div th:if="${absences == null}"
+										class="text-center text-primary">
+										<p>Run a query to show Data!</p>
+									</div>
 								</div>
 							</div>
-							<div class="card shadow mb-4">
-								<div class="card-header py-3">
-									<h6 class="m-0 font-weight-bold text-primary">Update
-										Student</h6>
-								</div>
-								<div class="text-center pt-2 mt-4 mb-4" id="selector">
-									<select
-										onchange="if (this.value) window.location.href = this.value;">
-										<option value="" disabled="disabled" selected="selected">Choose
-											a Student</option>
-										<option th:each="etudiant : ${etudiants}"
-											th:value="@{/cadre/updateStudent(etudiantSelected=${etudiant.id})}"
-											th:text="${etudiant.nomFR + ' ' + etudiant.prenomFR}"></option>
-									</select>
-								</div>
-								<div>
-									<form th:action="@{/cadre/editStudent}" method="post"
-										id="add-form" th:object="${studentToUpdate}">
-										<div class="row mt-3" id="form-add-contact">
-											<input type="hidden" th:value="*{id}" name="stdid">
-											<div class="col-6">
-												<p class="font-weight-bold">First Name (Fr)</p>
-												<input th:field="*{prenomFR}" th:value="*{prenomFR}"
-													type="text" placeholder="Ex: Mohammed" required>
-												<p class="font-weight-bold">Last Name (Fr)</p>
-												<input th:field="*{nomFR}" th:value="*{nomFR}" type="text"
-													placeholder="Ex: TATI" required>
-												<p class="font-weight-bold">First Name (Ar)</p>
-												<input th:field="*{prenomAR}" th:value="*{prenomAR}"
-													type="text" placeholder="Ex: محمد">
-												<p class="font-weight-bold">Last Name (Ar)</p>
-												<input th:field="*{nomAR}" th:value="*{nomAR}" type="text"
-													placeholder="Ex: تاتي">
-												<p class="font-weight-bold">Phone Number</p>
-												<input th:field="*{tele}" th:value="*{tele}" type="text"
-													placeholder="Ex: 06xxxxxx63" required>
 
-											</div>
-											<div class="col-6 mt-4">
-												<p class="font-weight-bold">CIN</p>
-												<input th:field="*{cin}" th:value="*{cin}" type="text"
-													placeholder="Ex: FLxxx82" required>
-												<p class="font-weight-bold">CNE</p>
-												<input th:field="*{cne}" th:value="*{cne}" type="text"
-													placeholder="Ex: H14xxxxxxx3" required>
-												<p class="font-weight-bold">Email</p>
-												<input th:field="*{email}" th:value="*{email}" type="text"
-													placeholder="Ex: example@gmail.com">
-												<p class="font-weight-bold">Birthday</p>
-												<input th:field="*{dateNaissance}" type="date" required>
 
-											</div>
-										</div>
-										<div id="submit-form">
-											<input type="submit"
-												class="btn btn-success font-weight-bold mt-4 mb-2"
-												value="Update Student" id="btn">
-										</div>
-
-									</form>
-								</div>
-							</div>
 
 						</div>
 					</div>
@@ -308,8 +275,41 @@
 
 	<!-- Page level plugins -->
 	<script src="/vendor/chart.js/Chart.min.js"></script>
+	<script type="text/javascript">
+		function convertToCSV(table) {
+			var csv = [];
+			var rows = table.querySelectorAll('tr');
 
+			for (var i = 0; i < rows.length; i++) {
+				var row = [];
+				var cells = rows[i].querySelectorAll('td, th');
 
+				for (var j = 0; j < cells.length - 1; j++) {
+					row.push(cells[j].innerText);
+				}
+
+				csv.push(row.join(','));
+			}
+
+			return csv.join('\n');
+		}
+
+		function downloadCSV(csv, filename) {
+			var csvFile = new Blob([ csv ], {
+				type : 'text/csv'
+			});
+			var downloadLink = document.createElement('a');
+			downloadLink.href = window.URL.createObjectURL(csvFile);
+			downloadLink.download = filename;
+			downloadLink.click();
+		}
+
+		function exportTableToCSV(tableId, filename) {
+			var table = document.getElementById(tableId);
+			var csv = convertToCSV(table);
+			downloadCSV(csv, filename);
+		}
+	</script>
 </body>
 
 </html>

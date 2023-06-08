@@ -43,10 +43,10 @@ public class CadreController {
 
 	@Autowired
 	private NiveauServiceImpl niveauServiceImpl;
-	
+
 	@Autowired
 	private UtilisateurServiceImpl utilisateurServiceImpl;
-	
+
 	@Autowired
 	private EtudiantServiceImpl etudiantServiceImpl;
 
@@ -165,12 +165,9 @@ public class CadreController {
 
 	@PostMapping("/update")
 	public String updateAbsence(@RequestParam(name = "Id", required = false) Long Id,
-			@ModelAttribute("AbsenceToUpdate") Absence absenceToUpdate,
-			@RequestParam(name = "module") Long moduleId,
-			@RequestParam(name = "startDate") String sDate,
-			@RequestParam(name = "endDate") String eDate,
-			@RequestParam(name = "nom") String nom,
-			Model model) throws ParseException {
+			@ModelAttribute("AbsenceToUpdate") Absence absenceToUpdate, @RequestParam(name = "module") Long moduleId,
+			@RequestParam(name = "startDate") String sDate, @RequestParam(name = "endDate") String eDate,
+			@RequestParam(name = "nom") String nom, Model model) throws ParseException {
 		selector(model);
 		SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm");
 
@@ -194,29 +191,89 @@ public class CadreController {
 
 		return "cadre/updateAbsence";
 	}
-	
+
 	@GetMapping("/studentMgn")
 	public String showStudentMgn(Model model) {
 		model.addAttribute("studentToAdd", new Etudiant());
+
+		List<Etudiant> etudiants = etudiantServiceImpl.getAllEtudiants();
+
+		model.addAttribute("etudiants", etudiants);
+		model.addAttribute("studentToUpdate", new Etudiant());
+		model.addAttribute("studentToDelete", new Etudiant());
+		
+
 		return "cadre/StudentMgn";
 	}
-	
+
 	@PostMapping("/addStudent")
-	public String addStudent(@ModelAttribute(name="studentToAdd") Etudiant etd,
-			@RequestParam(name="cne") String cne,
-			@RequestParam(name="birthday") String birthday, Model model) throws ParseException {
-		
+	public String addStudent(@ModelAttribute(name = "studentToAdd") Etudiant etd,
+			@RequestParam(name = "cne") String cne, @RequestParam(name = "birthday") String birthday, Model model)
+			throws ParseException {
+
 		SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
 
 		Date birthdayD = format.parse(birthday);
-		
+
 		etd.setCne(cne);
 		etd.setDateNaissance(birthdayD);
-		
+
 		etudiantServiceImpl.addEtudiant(etd);
-		
-		
+
+		List<Etudiant> etudiants = etudiantServiceImpl.getAllEtudiants();
+
+		model.addAttribute("etudiants", etudiants);
+
+		return "redirect:/cadre/studentMgn";
+	}
+
+	@GetMapping("/updateStudent")
+	public String updateStudent(@RequestParam(name = "etudiantSelected", required = false) String id, Model model) {
+		Etudiant etd = etudiantServiceImpl.getById(Long.parseLong(id));
+		model.addAttribute("studentToUpdate", etd);
+		model.addAttribute("studentToDelete", new Etudiant());
+		model.addAttribute("studentToAdd", new Etudiant());
+		List<Etudiant> etudiants = etudiantServiceImpl.getAllEtudiants();
+
+		model.addAttribute("etudiants", etudiants);
+		return "cadre/StudentMgn";
+	}
+	
+	@GetMapping("/deleteStudent")
+	public String deleteStudent(@RequestParam(name = "etudiantSelected", required = false) String id, Model model) {
+		Etudiant etd = etudiantServiceImpl.getById(Long.parseLong(id));
+		model.addAttribute("studentToUpdate", etd);
+		model.addAttribute("studentToDelete", new Etudiant());
+		model.addAttribute("studentToAdd", new Etudiant());
+		List<Etudiant> etudiants = etudiantServiceImpl.getAllEtudiants();
+
+		model.addAttribute("etudiants", etudiants);
+		return "cadre/StudentMgn";
+	}
+
+	@PostMapping("/editStudent")
+	public String editStudent(@RequestParam(name = "stdid") String id, @ModelAttribute("studentToUpdate") Etudiant e,
+			@RequestParam(name = "dateto") String date, Model model) throws ParseException {
+		SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+
+		Date birthdayD = format.parse(date);
+		e.setDateNaissance(birthdayD);
+		etudiantServiceImpl.updateEtudiant(Long.parseLong(id), e);
+		List<Etudiant> etudiants = etudiantServiceImpl.getAllEtudiants();
+
+		model.addAttribute("etudiants", etudiants);
 		return "redirect:/cadre/studentMgn";
 	}
 	
+	@GetMapping("/listStudent")
+	public String listStudent(Model model) {
+		List<Niveau> all = niveauServiceImpl.getAllClasses();
+
+		for (Niveau n : all) {
+			System.out.println(n.getAlias());
+		}
+		model.addAttribute("allNiveau", all);
+		return "cadre/StudentList";
+	}
+
 }

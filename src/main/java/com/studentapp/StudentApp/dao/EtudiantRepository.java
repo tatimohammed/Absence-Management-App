@@ -8,5 +8,9 @@ import com.studentapp.StudentApp.model.Etudiant;
 @Repository
 public interface EtudiantRepository extends JpaRepository<Etudiant, Long> {
 	
+	public Etudiant findByCne(String cne);
+	
+	public Etudiant findByid(Long id);
+	
 	
 }
